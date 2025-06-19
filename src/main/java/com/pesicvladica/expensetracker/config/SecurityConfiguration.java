@@ -36,7 +36,7 @@ public class SecurityConfiguration {
     public JsonWebToken jsonWebToken(@Value("${jwt.secret}") String secret) { return new JsonWebToken(secret); }
 
     @Bean
-    public AuthenticationFilter authenticationFilter(JsonWebToken jsonWebToken) { return new AuthenticationFilter(jsonWebToken); }
+    public AuthenticationFilter authenticationFilter(JsonWebToken jsonWebToken, AppUserDetailsService appUserDetailsService) { return new AuthenticationFilter(jsonWebToken, appUserDetailsService); }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,

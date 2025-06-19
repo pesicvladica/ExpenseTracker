@@ -23,7 +23,7 @@ public class AppUserDetailsService implements UserDetailsService {
     // region UserDetailsService
 
     @Override
-    public com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+    public AppUserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
         var appUser = appUserRepository
                 .findByUsername(usernameOrEmail)
                 .orElseGet(() ->
@@ -33,7 +33,7 @@ public class AppUserDetailsService implements UserDetailsService {
                                         new UsernameNotFoundException("Username or email not found!")
                                 )
                 );
-        return new com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails(appUser);
+        return new AppUserDetails(appUser);
     }
 
     // endregion

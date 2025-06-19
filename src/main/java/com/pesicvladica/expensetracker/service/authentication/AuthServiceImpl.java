@@ -83,5 +83,11 @@ public class AuthServiceImpl implements AuthService {
         return new UserAuthResponse(accessToken, user);
     }
 
+    @Transactional
+    public void logout(AppUser user) {
+        user.incrementTokenVersion();
+        appUserRepository.save(user);
+    }
+
     // endregion
 }

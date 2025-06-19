@@ -33,7 +33,6 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserResponse> getCurrent(Authentication authentication) {
         var username = authentication.getName();
-        System.out.println("Authenticated user: " + username);
         return ResponseEntity.ok().body(userService.getUser(username));
     }
 

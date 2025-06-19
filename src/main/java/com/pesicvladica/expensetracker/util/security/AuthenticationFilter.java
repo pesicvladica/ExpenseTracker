@@ -1,8 +1,8 @@
 package com.pesicvladica.expensetracker.util.security;
 
 import com.pesicvladica.expensetracker.exception.CredentialsInvalidException;
-import com.pesicvladica.expensetracker.model.AppUser;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
+import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,13 +19,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     // region Properties
 
     private final JsonWebToken jsonWebToken;
+    private final AppUserDetailsService appUserDetailsService;
 
     // endregion
 
     // region Initialization
 
-    public AuthenticationFilter(JsonWebToken jsonWebToken) {
+    public AuthenticationFilter(JsonWebToken jsonWebToken,
+                                AppUserDetailsService appUserDetailsService) {
         this.jsonWebToken = jsonWebToken;
+        this.appUserDetailsService = appUserDetailsService;
     }
 
     // endregion
@@ -44,11 +47,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         throw new CredentialsInvalidException("Unauthorized access!");
     }
 
-    private AppUserDetails userDetailsFrom(String token ) {
-        Long userId = jsonWebToken.getUserIdFor(token);
-        String username = jsonWebToken.getUsernameFor(token);
-        String email = jsonWebToken.getEmailFor(token);
-        var user = AppUser.regularExistingUser(userId, username, email);
+    private AppUserDetails userDetailsFrom(String token) {
+        var username = jsonWebToken.getUsernameFor(token);
+        var user = appUserDetailsService.loadUserByUsername(username).getAppUser();
         if (jsonWebToken.isTokenValidForUser(token, user)) {
             return new AppUserDetails(user);
         }

@@ -40,6 +40,9 @@ public class AppUser {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(name = "token_version", nullable = false)
+    private Long tokenVersion = 0L;
+
     // endregion
 
     // region Initialization
@@ -84,6 +87,9 @@ public class AppUser {
     @JsonIgnore public String getPassword() { return password; }
     public Role getRole() { return role; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+
+    public Long getTokenVersion() { return tokenVersion; }
+    public void incrementTokenVersion() { tokenVersion++; }
 
     // endregion
 

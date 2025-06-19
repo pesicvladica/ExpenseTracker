@@ -17,9 +17,7 @@ public class JsonWebToken {
     private final long lifeSpan;
     private final String issuer;
 
-    private final static String userId = "user_id";
-    private final static String username = "username";
-    private final static String email = "email";
+    private final static String tokenVersion = "token_version";
 
     // endregion
 
@@ -39,9 +37,7 @@ public class JsonWebToken {
         return Jwts.builder()
                 .setIssuer(issuer)
                 .setSubject(user.getUsername())
-                .claim(JsonWebToken.userId, user.getId())
-                .claim(JsonWebToken.username, user.getUsername())
-                .claim(JsonWebToken.email, user.getEmail())
+                .claim(JsonWebToken.tokenVersion, user.getTokenVersion())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + lifeSpan))
                 .signWith(jwtSecretKey)
@@ -68,25 +64,18 @@ public class JsonWebToken {
         try {
             Claims jwtClaims = getJWTClaims(token);
 
-            String username = jwtClaims.get(JsonWebToken.username, String.class);
+            String username = jwtClaims.getSubject();
             boolean isExpired = jwtClaims.getExpiration().before(new Date());
+            Long tokenVersion = jwtClaims.get(JsonWebToken.tokenVersion, Long.class);
 
-            return username.equals(user.getUsername()) && !isExpired;
+            return username.equals(user.getUsername()) && !isExpired && tokenVersion.equals(user.getTokenVersion());
         } catch (Exception e) {
             return false;
         }
     }
 
-    public Long getUserIdFor(String token) {
-        return getJWTClaims(token).get(JsonWebToken.userId, Long.class);
-    }
-
     public String getUsernameFor(String token) {
-        return getJWTClaims(token).get(JsonWebToken.username, String.class);
-    }
-
-    public String getEmailFor(String token) {
-        return getJWTClaims(token).get(JsonWebToken.email, String.class);
+        return getJWTClaims(token).getSubject();
     }
 
     // endregion
