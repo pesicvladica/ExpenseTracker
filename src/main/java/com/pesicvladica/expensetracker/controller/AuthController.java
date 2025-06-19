@@ -1,5 +1,6 @@
 package com.pesicvladica.expensetracker.controller;
 
+import com.pesicvladica.expensetracker.dto.UserLoginRequest;
 import com.pesicvladica.expensetracker.dto.UserRegisterRequest;
 import com.pesicvladica.expensetracker.dto.UserResponse;
 import com.pesicvladica.expensetracker.service.AuthService;
@@ -34,6 +35,12 @@ public class AuthController {
     @PermitAll
     public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest userRegisterRequest) {
         return ResponseEntity.ok().body(authService.register(userRegisterRequest));
+    }
+
+    @PostMapping("/login")
+    @PermitAll
+    public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
+        return ResponseEntity.ok().body(authService.login(userLoginRequest));
     }
 
     // endregion
