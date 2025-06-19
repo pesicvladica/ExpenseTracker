@@ -6,6 +6,7 @@ import com.pesicvladica.expensetracker.dto.UserAuthResponse;
 import com.pesicvladica.expensetracker.service.authentication.AuthService;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,15 +23,8 @@ public class AuthController {
 
     // region Parameters
 
-    private final AuthService authService;
-
-    // endregion
-
-    // region Initialization
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+    @Autowired
+    private AuthService authService;
 
     // endregion
 

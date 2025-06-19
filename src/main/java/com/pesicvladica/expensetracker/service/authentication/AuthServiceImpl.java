@@ -9,6 +9,7 @@ import com.pesicvladica.expensetracker.service.authentication.security.AppUserDe
 import com.pesicvladica.expensetracker.util.security.JsonWebToken;
 import com.pesicvladica.expensetracker.util.validator.UserLoginRequestValidator;
 import com.pesicvladica.expensetracker.util.validator.UserRegisterRequestValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,24 +22,23 @@ public class AuthServiceImpl implements AuthService {
 
     // region Properties
 
-    private final AppUserRepository appUserRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JsonWebToken jsonWebToken;
+    @Autowired
+    private AppUserRepository appUserRepository;
 
-    // endregion
+    @Autowired
+    private UserRegisterRequestValidator userRegisterRequestValidator;
 
-    // region Initialization
+    @Autowired
+    private UserLoginRequestValidator userLoginRequestValidator;
 
-    public AuthServiceImpl(AppUserRepository appUserRepository,
-                           PasswordEncoder passwordEncoder,
-                           AuthenticationManager authenticationManager,
-                           JsonWebToken jsonWebToken) {
-        this.appUserRepository = appUserRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jsonWebToken = jsonWebToken;
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JsonWebToken jsonWebToken;
 
     // endregion
 
@@ -61,8 +61,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     public UserAuthResponse register(UserRegisterRequest request) {
-        var validator = new UserRegisterRequestValidator(appUserRepository);
-        validator.validate(request);
+        userRegisterRequestValidator.validate(request);
 
         var appUser = AppUser.regularUser(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
         var savedUser = appUserRepository.save(appUser);
@@ -72,8 +71,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     public UserAuthResponse login(UserLoginRequest request) {
-        var validator = new UserLoginRequestValidator(appUserRepository);
-        validator.validate(request);
+        userLoginRequestValidator.validate(request);
 
         var user = authenticatedUserWith(request.getUsernameOrEmail(), request.getPassword());
         request.eraseCredentials();

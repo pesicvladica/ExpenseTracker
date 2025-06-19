@@ -1,22 +1,18 @@
 package com.pesicvladica.expensetracker.service.authentication.security;
 
 import com.pesicvladica.expensetracker.repository.AppUserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AppUserDetailsService implements UserDetailsService {
 
     // region Properties
 
-    private final AppUserRepository appUserRepository;
-
-    // endregion
-
-    // region Initialization
-
-    public AppUserDetailsService(AppUserRepository appUserRepository) {
-        this.appUserRepository = appUserRepository;
-    }
+    @Autowired
+    private AppUserRepository appUserRepository;
 
     // endregion
 

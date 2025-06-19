@@ -30,13 +30,7 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception { return config.getAuthenticationManager(); }
 
     @Bean
-    public AppUserDetailsService appUserDetailsService(AppUserRepository appUserRepository) { return new AppUserDetailsService(appUserRepository); }
-
-    @Bean
     public JsonWebToken jsonWebToken(@Value("${jwt.secret}") String secret) { return new JsonWebToken(secret); }
-
-    @Bean
-    public AuthenticationFilter authenticationFilter(JsonWebToken jsonWebToken, AppUserDetailsService appUserDetailsService) { return new AuthenticationFilter(jsonWebToken, appUserDetailsService); }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,

@@ -4,20 +4,16 @@ import com.pesicvladica.expensetracker.dto.UserRegisterRequest;
 import com.pesicvladica.expensetracker.exception.CredentialsInvalidException;
 import com.pesicvladica.expensetracker.exception.UserAlreadyExistsException;
 import com.pesicvladica.expensetracker.repository.AppUserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserRegisterRequestValidator implements Validator<UserRegisterRequest> {
 
     // region Properties
 
-    private final AppUserRepository appUserRepository;
-
-    // endregion
-
-    // region Initialization
-
-    public UserRegisterRequestValidator(AppUserRepository appUserRepository) {
-        this.appUserRepository = appUserRepository;
-    }
+    @Autowired
+    private AppUserRepository appUserRepository;
 
     // endregion
 

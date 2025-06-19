@@ -2,6 +2,7 @@ package com.pesicvladica.expensetracker.controller;
 
 import com.pesicvladica.expensetracker.dto.UserResponse;
 import com.pesicvladica.expensetracker.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -15,15 +16,8 @@ public class UserController {
 
     // region Properties
 
-    private final UserService userService;
-
-    // endregion
-
-    // region Initialization
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
 
     // endregion
 
