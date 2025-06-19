@@ -30,9 +30,6 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception { return config.getAuthenticationManager(); }
 
     @Bean
-    public JsonWebToken jsonWebToken(@Value("${jwt.secret}") String secret) { return new JsonWebToken(secret); }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    AuthenticationFilter authenticationFilter) throws Exception {
         http

@@ -4,29 +4,30 @@ import com.pesicvladica.expensetracker.model.AppUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
 
+@Component
 public class JsonWebToken {
 
     // region Properties
 
     private final SecretKey jwtSecretKey;
-    private final long lifeSpan;
-    private final String issuer;
 
+    private final static long lifeSpan = 1000 * 60 * 15;
+    private final static String issuer = "JsonWebTokenService";
     private final static String tokenVersion = "token_version";
 
     // endregion
 
     // region Initialization
 
-    public JsonWebToken(String secret) {
+    public JsonWebToken(@Value("${jwt.secret}") String secret) {
         this.jwtSecretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
-        this.lifeSpan = 1000 * 60 * 15;
-        this.issuer = "JsonWebTokenService";
     }
 
     // endregion
@@ -35,11 +36,11 @@ public class JsonWebToken {
 
     private String generateJWT(AppUser user) {
         return Jwts.builder()
-                .setIssuer(issuer)
+                .setIssuer(JsonWebToken.issuer)
                 .setSubject(user.getUsername())
                 .claim(JsonWebToken.tokenVersion, user.getTokenVersion())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + lifeSpan))
+                .setExpiration(new Date(System.currentTimeMillis() + JsonWebToken.lifeSpan))
                 .signWith(jwtSecretKey)
                 .compact();
     }
