@@ -2,8 +2,8 @@ package com.pesicvladica.expensetracker.controller;
 
 import com.pesicvladica.expensetracker.dto.UserLoginRequest;
 import com.pesicvladica.expensetracker.dto.UserRegisterRequest;
-import com.pesicvladica.expensetracker.dto.UserResponse;
-import com.pesicvladica.expensetracker.service.AuthService;
+import com.pesicvladica.expensetracker.dto.UserAuthResponse;
+import com.pesicvladica.expensetracker.service.authentication.AuthService;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,13 +33,13 @@ public class AuthController {
 
     @PostMapping("/register")
     @PermitAll
-    public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public ResponseEntity<UserAuthResponse> register(@RequestBody UserRegisterRequest userRegisterRequest) {
         return ResponseEntity.ok().body(authService.register(userRegisterRequest));
     }
 
     @PostMapping("/login")
     @PermitAll
-    public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
+    public ResponseEntity<UserAuthResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
         return ResponseEntity.ok().body(authService.login(userLoginRequest));
     }
 

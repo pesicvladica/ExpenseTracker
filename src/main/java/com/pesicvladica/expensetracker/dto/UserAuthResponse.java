@@ -1,40 +1,44 @@
 package com.pesicvladica.expensetracker.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pesicvladica.expensetracker.model.AppUser;
 
-import java.time.LocalDateTime;
-
-public class UserResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class UserAuthResponse {
 
     // region Properties
 
+    private final String accessToken;
     private final Long userId;
     private final String username;
     private final String email;
-    private final String role;
-    private final LocalDateTime createdAt;
 
     // endregion
 
     // region Initialization
 
-    public UserResponse(AppUser appUser) {
+    public UserAuthResponse(AppUser appUser) {
+        this.accessToken = null;
         this.userId = appUser.getId();
         this.username = appUser.getUsername();
         this.email = appUser.getEmail();
-        this.role = appUser.getRole().toString();
-        this.createdAt = appUser.getCreatedAt();
+    }
+
+    public UserAuthResponse(String accessToken, AppUser appUser) {
+        this.accessToken = accessToken;
+        this.userId = appUser.getId();
+        this.username = appUser.getUsername();
+        this.email = appUser.getEmail();
     }
 
     // endregion
 
     // region Getters
 
+    public String getAccessToken() { return accessToken; }
     public Long getUserId() { return userId; }
     public String getUsername() { return username; }
     public String getEmail() { return email; }
-    public String getRole() { return role; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
 
     // endregion
 }

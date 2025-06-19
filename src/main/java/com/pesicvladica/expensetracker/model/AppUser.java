@@ -51,6 +51,14 @@ public class AppUser {
         this.role = null;
     }
 
+    private AppUser(Long id, String username, String email, String password, Role role) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     private AppUser(String username, String email, String password, Role role) {
         this.username = username;
         this.email = email;
@@ -60,6 +68,10 @@ public class AppUser {
 
     public static AppUser regularUser(String username, String email, String password) {
         return new AppUser(username, email, password, Role.USER);
+    }
+
+    public static AppUser regularExistingUser(Long id, String username, String email) {
+        return new AppUser(id, username, email, null, Role.USER);
     }
 
     // endregion

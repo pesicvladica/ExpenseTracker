@@ -1,4 +1,4 @@
-package com.pesicvladica.expensetracker.service.secure;
+package com.pesicvladica.expensetracker.service.authentication.security;
 
 import com.pesicvladica.expensetracker.repository.AppUserRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,7 +23,7 @@ public class AppUserDetailsService implements UserDetailsService {
     // region UserDetailsService
 
     @Override
-    public AppUserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+    public com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
         var appUser = appUserRepository
                 .findByUsername(usernameOrEmail)
                 .orElseGet(() ->
@@ -33,7 +33,7 @@ public class AppUserDetailsService implements UserDetailsService {
                                         new UsernameNotFoundException("Username or email not found!")
                                 )
                 );
-        return new AppUserDetails(appUser);
+        return new com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails(appUser);
     }
 
     // endregion

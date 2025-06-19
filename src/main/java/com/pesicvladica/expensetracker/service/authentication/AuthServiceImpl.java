@@ -1,11 +1,12 @@
-package com.pesicvladica.expensetracker.service;
+package com.pesicvladica.expensetracker.service.authentication;
 
 import com.pesicvladica.expensetracker.dto.UserLoginRequest;
 import com.pesicvladica.expensetracker.dto.UserRegisterRequest;
-import com.pesicvladica.expensetracker.dto.UserResponse;
+import com.pesicvladica.expensetracker.dto.UserAuthResponse;
 import com.pesicvladica.expensetracker.model.AppUser;
 import com.pesicvladica.expensetracker.repository.AppUserRepository;
-import com.pesicvladica.expensetracker.service.secure.AppUserDetails;
+import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
+import com.pesicvladica.expensetracker.util.security.JsonWebToken;
 import com.pesicvladica.expensetracker.util.validator.UserLoginRequestValidator;
 import com.pesicvladica.expensetracker.util.validator.UserRegisterRequestValidator;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ public class AuthServiceImpl implements AuthService {
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JsonWebToken jsonWebToken;
 
     // endregion
 
@@ -30,10 +32,12 @@ public class AuthServiceImpl implements AuthService {
 
     public AuthServiceImpl(AppUserRepository appUserRepository,
                            PasswordEncoder passwordEncoder,
-                           AuthenticationManager authenticationManager) {
+                           AuthenticationManager authenticationManager,
+                           JsonWebToken jsonWebToken) {
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.jsonWebToken = jsonWebToken;
     }
 
     // endregion
@@ -47,12 +51,16 @@ public class AuthServiceImpl implements AuthService {
         return appUserDetails.getAppUser();
     }
 
+    private String accessTokenFor(AppUser user) {
+        return jsonWebToken.generateAccessTokenFor(user);
+    }
+
     // endregion
 
     // region Public Methods
 
     @Transactional
-    public UserResponse register(UserRegisterRequest request) {
+    public UserAuthResponse register(UserRegisterRequest request) {
         var validator = new UserRegisterRequestValidator(appUserRepository);
         validator.validate(request);
 
@@ -60,17 +68,19 @@ public class AuthServiceImpl implements AuthService {
         var savedUser = appUserRepository.save(appUser);
         request.eraseCredentials();
 
-        return new UserResponse(savedUser);
+        return new UserAuthResponse(savedUser);
     }
 
-    public UserResponse login(UserLoginRequest request) {
+    public UserAuthResponse login(UserLoginRequest request) {
         var validator = new UserLoginRequestValidator(appUserRepository);
         validator.validate(request);
 
         var user = authenticatedUserWith(request.getUsernameOrEmail(), request.getPassword());
         request.eraseCredentials();
 
-        return new UserResponse(user);
+        var accessToken = accessTokenFor(user);
+
+        return new UserAuthResponse(accessToken, user);
     }
 
     // endregion

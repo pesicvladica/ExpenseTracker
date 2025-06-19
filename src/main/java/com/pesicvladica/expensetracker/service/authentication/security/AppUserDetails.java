@@ -1,4 +1,4 @@
-package com.pesicvladica.expensetracker.service.secure;
+package com.pesicvladica.expensetracker.service.authentication.security;
 
 import com.pesicvladica.expensetracker.model.AppUser;
 import org.springframework.security.core.GrantedAuthority;
