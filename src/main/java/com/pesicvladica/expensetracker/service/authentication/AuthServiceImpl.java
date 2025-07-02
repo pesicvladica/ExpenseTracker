@@ -1,8 +1,11 @@
 package com.pesicvladica.expensetracker.service.authentication;
 
+import com.pesicvladica.expensetracker.dto.DeviceInfo;
 import com.pesicvladica.expensetracker.dto.UserLoginRequest;
 import com.pesicvladica.expensetracker.dto.UserRegisterRequest;
 import com.pesicvladica.expensetracker.dto.UserAuthResponse;
+import com.pesicvladica.expensetracker.exception.BlockedUserException;
+import com.pesicvladica.expensetracker.exception.CredentialsInvalidException;
 import com.pesicvladica.expensetracker.model.AppUser;
 import com.pesicvladica.expensetracker.repository.AppUserRepository;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
@@ -40,6 +43,9 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private JsonWebToken jsonWebToken;
 
+    @Autowired
+    private LoginAttemptService loginAttemptService;
+
     // endregion
 
     // region Private Methods
@@ -60,7 +66,11 @@ public class AuthServiceImpl implements AuthService {
     // region Public Methods
 
     @Transactional
-    public UserAuthResponse register(UserRegisterRequest request) {
+    public UserAuthResponse register(UserRegisterRequest request, DeviceInfo deviceInfo) {
+        if (loginAttemptService.isBlocked(null, deviceInfo) || loginAttemptService.isBlocked("", deviceInfo)) {
+            throw new BlockedUserException("Registration not allowed from this IP address.");
+        }
+
         userRegisterRequestValidator.validate(request);
 
         var appUser = AppUser.regularUser(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
@@ -70,15 +80,25 @@ public class AuthServiceImpl implements AuthService {
         return new UserAuthResponse(savedUser);
     }
 
-    public UserAuthResponse login(UserLoginRequest request) {
-        userLoginRequestValidator.validate(request);
+    public UserAuthResponse login(UserLoginRequest request, DeviceInfo deviceInfo) {
+        if (loginAttemptService.isBlocked(request.getUsernameOrEmail(), deviceInfo)) {
+            throw new BlockedUserException("Login failed (account or IP blocked).");
+        }
 
-        var user = authenticatedUserWith(request.getUsernameOrEmail(), request.getPassword());
-        request.eraseCredentials();
+        try {
+            userLoginRequestValidator.validate(request);
 
-        var accessToken = accessTokenFor(user);
+            var user = authenticatedUserWith(request.getUsernameOrEmail(), request.getPassword());
+            request.eraseCredentials();
 
-        return new UserAuthResponse(accessToken, user);
+            var accessToken = accessTokenFor(user);
+
+            loginAttemptService.loginSucceeded(request.getUsernameOrEmail());
+            return new UserAuthResponse(accessToken, user);
+        } catch(RuntimeException ex) {
+            loginAttemptService.loginFailed(request.getUsernameOrEmail(), deviceInfo);
+            throw new CredentialsInvalidException("Could not authenticate!");
+        }
     }
 
     @Transactional

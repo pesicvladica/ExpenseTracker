@@ -1,11 +1,14 @@
 package com.pesicvladica.expensetracker.controller;
 
+import com.pesicvladica.expensetracker.dto.DeviceInfo;
 import com.pesicvladica.expensetracker.dto.UserLoginRequest;
 import com.pesicvladica.expensetracker.dto.UserRegisterRequest;
 import com.pesicvladica.expensetracker.dto.UserAuthResponse;
 import com.pesicvladica.expensetracker.service.authentication.AuthService;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
+import com.pesicvladica.expensetracker.util.helpers.DeviceInfoHelper;
 import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,14 +35,18 @@ public class AuthController {
 
     @PostMapping("/register")
     @PermitAll
-    public ResponseEntity<UserAuthResponse> register(@RequestBody UserRegisterRequest userRegisterRequest) {
-        return ResponseEntity.ok().body(authService.register(userRegisterRequest));
+    public ResponseEntity<UserAuthResponse> register(HttpServletRequest request,
+                                                     @RequestBody UserRegisterRequest userRegisterRequest) {
+        var deviceInfo = DeviceInfoHelper.getDeviceInfoFromRequest(request);
+        return ResponseEntity.ok().body(authService.register(userRegisterRequest, deviceInfo));
     }
 
     @PostMapping("/login")
     @PermitAll
-    public ResponseEntity<UserAuthResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
-        return ResponseEntity.ok().body(authService.login(userLoginRequest));
+    public ResponseEntity<UserAuthResponse> login(HttpServletRequest request,
+                                                  @RequestBody UserLoginRequest userLoginRequest) {
+        var deviceInfo = DeviceInfoHelper.getDeviceInfoFromRequest(request);
+        return ResponseEntity.ok().body(authService.login(userLoginRequest, deviceInfo));
     }
 
     @PostMapping("/logout")

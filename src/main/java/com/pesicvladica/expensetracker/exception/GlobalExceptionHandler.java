@@ -10,6 +10,11 @@ public class GlobalExceptionHandler {
 
     // region Exception handling
 
+    @ExceptionHandler(BlockedUserException.class)
+    public ResponseEntity<AppError> handleBlockedUserExceptionException(BlockedUserException ex) {
+        return ResponseEntity.badRequest().body(new AppError(ex.getMessage()));
+    }
+
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<AppError> handleUserExistsException(UserAlreadyExistsException ex) {
         return ResponseEntity.badRequest().body(new AppError(ex.getMessage()));
