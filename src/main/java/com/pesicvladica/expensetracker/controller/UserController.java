@@ -1,6 +1,6 @@
 package com.pesicvladica.expensetracker.controller;
 
-import com.pesicvladica.expensetracker.dto.UserResponse;
+import com.pesicvladica.expensetracker.dto.user.UserResponse;
 import com.pesicvladica.expensetracker.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

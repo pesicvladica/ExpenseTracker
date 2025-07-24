@@ -1,6 +1,6 @@
 package com.pesicvladica.expensetracker.util.validator;
 
-import com.pesicvladica.expensetracker.dto.UserLoginRequest;
+import com.pesicvladica.expensetracker.dto.user.UserLoginRequest;
 import com.pesicvladica.expensetracker.exception.CredentialsInvalidException;
 import com.pesicvladica.expensetracker.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

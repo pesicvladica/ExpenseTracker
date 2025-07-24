@@ -1,9 +1,9 @@
 package com.pesicvladica.expensetracker.service.authentication;
 
 import com.pesicvladica.expensetracker.dto.DeviceInfo;
-import com.pesicvladica.expensetracker.dto.UserLoginRequest;
-import com.pesicvladica.expensetracker.dto.UserRegisterRequest;
-import com.pesicvladica.expensetracker.dto.UserAuthResponse;
+import com.pesicvladica.expensetracker.dto.user.UserLoginRequest;
+import com.pesicvladica.expensetracker.dto.user.UserRegisterRequest;
+import com.pesicvladica.expensetracker.dto.user.UserAuthResponse;
 import com.pesicvladica.expensetracker.exception.BlockedUserException;
 import com.pesicvladica.expensetracker.exception.CredentialsInvalidException;
 import com.pesicvladica.expensetracker.model.AppUser;

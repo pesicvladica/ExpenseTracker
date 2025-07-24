@@ -1,6 +1,6 @@
 package com.pesicvladica.expensetracker.util.validator;
 
-import com.pesicvladica.expensetracker.dto.UserRegisterRequest;
+import com.pesicvladica.expensetracker.dto.user.UserRegisterRequest;
 import com.pesicvladica.expensetracker.exception.CredentialsInvalidException;
 import com.pesicvladica.expensetracker.exception.UserAlreadyExistsException;
 import com.pesicvladica.expensetracker.repository.AppUserRepository;
