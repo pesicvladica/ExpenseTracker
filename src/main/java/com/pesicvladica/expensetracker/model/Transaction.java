@@ -56,6 +56,10 @@ public class Transaction {
         return new Transaction(user, amount, timeAdded, TransactionType.OUTCOME);
     }
 
+    public static Transaction createTransaction(AppUser user, BigDecimal amount, LocalDateTime timeAdded, TransactionType type) {
+        return new Transaction(user, amount, timeAdded, type);
+    }
+
     // endregion
 
     // region Getters/Setters

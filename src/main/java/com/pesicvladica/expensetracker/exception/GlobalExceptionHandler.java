@@ -30,5 +30,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new AppError(ex.getMessage()));
     }
 
+    @ExceptionHandler(TransactionInvalidException.class)
+    public ResponseEntity<AppError> handleTransactionNotFound(TransactionInvalidException ex) {
+        return ResponseEntity.badRequest().body(new AppError(ex.getMessage()));
+    }
+
     // endregion
 }
