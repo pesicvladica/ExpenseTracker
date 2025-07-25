@@ -3,11 +3,11 @@ package com.pesicvladica.expensetracker.util.security;
 import com.pesicvladica.expensetracker.exception.CredentialsInvalidException;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetailsService;
+import com.pesicvladica.expensetracker.util.security.token.JWTTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,11 +21,18 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     // region Properties
 
-    @Autowired
-    private JsonWebToken jsonWebToken;
+    private final JWTTokenService JWTTokenService;
+    private final AppUserDetailsService appUserDetailsService;
 
-    @Autowired
-    private AppUserDetailsService appUserDetailsService;
+    // endregion
+
+    // region Initialization
+
+    public AuthenticationFilter(JWTTokenService JWTTokenService,
+                                AppUserDetailsService appUserDetailsService) {
+        this.JWTTokenService = JWTTokenService;
+        this.appUserDetailsService = appUserDetailsService;
+    }
 
     // endregion
 
@@ -44,9 +51,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     }
 
     private AppUserDetails userDetailsFrom(String token) {
-        var username = jsonWebToken.getUsernameFor(token);
+        var username = JWTTokenService.getUsernameFor(token);
         var user = appUserDetailsService.loadUserByUsername(username).getAppUser();
-        if (jsonWebToken.isTokenValidForUser(token, user)) {
+        if (JWTTokenService.isTokenValidForUser(token, user)) {
             return new AppUserDetails(user);
         }
         throw new CredentialsInvalidException("Unauthorized access!");

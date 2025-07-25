@@ -1,5 +1,6 @@
 package com.pesicvladica.expensetracker.dto.transaction;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ public class TransactionUpdateRequest {
 
     // region Initialization
 
-    protected TransactionUpdateRequest(BigDecimal amount, LocalDateTime timeAdded) {
+    protected TransactionUpdateRequest(@Nullable BigDecimal amount, @Nullable LocalDateTime timeAdded) {
         this.amount = amount;
         this.timeAdded = timeAdded;
     }

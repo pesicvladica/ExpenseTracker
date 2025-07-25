@@ -24,5 +24,6 @@ public interface TransactionService {
     @PreAuthorize("@securityService.isTransactionOwner(#transactionId, #currentUser.appUser)")
     Optional<Transaction> getTransactionById(Long transactionId, @AuthenticationPrincipal AppUserDetails currentUser);
 
-    List<Transaction> getTransactions(@AuthenticationPrincipal AppUserDetails currentUser);
+    List<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser);
+    List<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser);
 }

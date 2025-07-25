@@ -3,16 +3,13 @@ package com.pesicvladica.expensetracker.service.authentication;
 import com.pesicvladica.expensetracker.dto.DeviceInfo;
 import com.pesicvladica.expensetracker.dto.user.UserLoginRequest;
 import com.pesicvladica.expensetracker.dto.user.UserRegisterRequest;
-import com.pesicvladica.expensetracker.dto.user.UserAuthResponse;
 import com.pesicvladica.expensetracker.exception.BlockedUserException;
 import com.pesicvladica.expensetracker.exception.CredentialsInvalidException;
 import com.pesicvladica.expensetracker.model.AppUser;
 import com.pesicvladica.expensetracker.repository.AppUserRepository;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
-import com.pesicvladica.expensetracker.util.security.JsonWebToken;
 import com.pesicvladica.expensetracker.util.validator.UserLoginRequestValidator;
 import com.pesicvladica.expensetracker.util.validator.UserRegisterRequestValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,26 +22,30 @@ public class AuthServiceImpl implements AuthService {
 
     // region Properties
 
-    @Autowired
-    private AppUserRepository appUserRepository;
+    private final AppUserRepository appUserRepository;
+    private final UserRegisterRequestValidator userRegisterRequestValidator;
+    private final UserLoginRequestValidator userLoginRequestValidator;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final LoginAttemptService loginAttemptService;
 
-    @Autowired
-    private UserRegisterRequestValidator userRegisterRequestValidator;
+    // endregion
 
-    @Autowired
-    private UserLoginRequestValidator userLoginRequestValidator;
+    // region Initialization
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JsonWebToken jsonWebToken;
-
-    @Autowired
-    private LoginAttemptService loginAttemptService;
+    public AuthServiceImpl(AppUserRepository appUserRepository,
+                           UserRegisterRequestValidator userRegisterRequestValidator,
+                           UserLoginRequestValidator userLoginRequestValidator,
+                           PasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager,
+                           LoginAttemptService loginAttemptService) {
+        this.appUserRepository = appUserRepository;
+        this.userRegisterRequestValidator = userRegisterRequestValidator;
+        this.userLoginRequestValidator = userLoginRequestValidator;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.loginAttemptService = loginAttemptService;
+    }
 
     // endregion
 
@@ -57,17 +58,13 @@ public class AuthServiceImpl implements AuthService {
         return appUserDetails.getAppUser();
     }
 
-    private String accessTokenFor(AppUser user) {
-        return jsonWebToken.generateAccessTokenFor(user);
-    }
-
     // endregion
 
     // region Public Methods
 
     @Override
     @Transactional
-    public UserAuthResponse register(UserRegisterRequest request, DeviceInfo deviceInfo) {
+    public AppUser register(UserRegisterRequest request, DeviceInfo deviceInfo) {
         if (loginAttemptService.isBlocked(null, deviceInfo) || loginAttemptService.isBlocked("", deviceInfo)) {
             throw new BlockedUserException("Registration not allowed from this IP address.");
         }
@@ -78,11 +75,12 @@ public class AuthServiceImpl implements AuthService {
         var savedUser = appUserRepository.save(appUser);
         request.eraseCredentials();
 
-        return new UserAuthResponse(savedUser);
+        return savedUser;
     }
 
     @Override
-    public UserAuthResponse login(UserLoginRequest request, DeviceInfo deviceInfo) {
+    @Transactional(readOnly = true)
+    public AppUser login(UserLoginRequest request, DeviceInfo deviceInfo) {
         if (loginAttemptService.isBlocked(request.getUsernameOrEmail(), deviceInfo)) {
             throw new BlockedUserException("Login failed (account or IP blocked).");
         }
@@ -93,10 +91,8 @@ public class AuthServiceImpl implements AuthService {
             var user = authenticatedUserWith(request.getUsernameOrEmail(), request.getPassword());
             request.eraseCredentials();
 
-            var accessToken = accessTokenFor(user);
-
             loginAttemptService.loginSucceeded(request.getUsernameOrEmail());
-            return new UserAuthResponse(accessToken, user);
+            return user;
         } catch(RuntimeException ex) {
             loginAttemptService.loginFailed(request.getUsernameOrEmail(), deviceInfo);
             throw new CredentialsInvalidException("Could not authenticate!");

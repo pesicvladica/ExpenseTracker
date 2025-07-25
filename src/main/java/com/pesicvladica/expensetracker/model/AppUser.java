@@ -19,13 +19,13 @@ public class AppUser {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 50)
-    private final String username;
+    private String username;
 
     @Column(nullable = false, unique = true, length = 100)
-    private final String email;
+    private String email;
 
     @Column(nullable = false)
-    private final String password;
+    private String password;
 
     public enum Role {
         USER,
@@ -34,7 +34,7 @@ public class AppUser {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private final Role role;
+    private Role role;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -87,9 +87,16 @@ public class AppUser {
     @JsonIgnore public String getPassword() { return password; }
     public Role getRole() { return role; }
     public LocalDateTime getCreatedAt() { return createdAt; }
-
     public Long getTokenVersion() { return tokenVersion; }
     public void incrementTokenVersion() { tokenVersion++; }
+
+    public void setId(Long id) { this.id = id; }
+    public void setUsername(String username) { this.username = username; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPassword(String password) { this.password = password; }
+    public void setRole(Role role) { this.role = role; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setTokenVersion(Long tokenVersion) { this.tokenVersion = tokenVersion; }
 
     // endregion
 

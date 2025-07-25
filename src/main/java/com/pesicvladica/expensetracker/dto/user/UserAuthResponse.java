@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pesicvladica.expensetracker.model.AppUser;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserAuthResponse {
+public final class UserAuthResponse {
 
     // region Properties
 

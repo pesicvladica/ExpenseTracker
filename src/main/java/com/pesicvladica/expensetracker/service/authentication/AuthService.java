@@ -7,7 +7,7 @@ import com.pesicvladica.expensetracker.dto.user.UserAuthResponse;
 import com.pesicvladica.expensetracker.model.AppUser;
 
 public interface AuthService {
-    UserAuthResponse register(UserRegisterRequest request, DeviceInfo deviceInfo);
-    UserAuthResponse login(UserLoginRequest request, DeviceInfo deviceInfo);
+    AppUser register(UserRegisterRequest request, DeviceInfo deviceInfo);
+    AppUser login(UserLoginRequest request, DeviceInfo deviceInfo);
     void logout(AppUser user);
 }

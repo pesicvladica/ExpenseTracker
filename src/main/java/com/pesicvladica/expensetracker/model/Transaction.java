@@ -18,7 +18,7 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, columnDefinition = "BIGINT UNSIGNED")
-    private final  AppUser user;
+    private AppUser user;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
@@ -28,7 +28,7 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
-    private final TransactionType type;
+    private TransactionType type;
 
     // endregion
 
@@ -66,11 +66,13 @@ public class Transaction {
 
     public Long getId() { return id; }
     public AppUser getUser() { return user; }
+    public void setUser(AppUser user) { this.user = user; }
     public BigDecimal getAmount() { return amount; }
     public void setTimeAdded(LocalDateTime timeAdded) { this.timeAdded = timeAdded; }
     public LocalDateTime getTimeAdded() { return timeAdded; }
     public void setAmount(BigDecimal amount) { this.amount = amount; }
     public TransactionType getType() { return type; }
+    public void setType(TransactionType type) { this.type = type; }
 
     // endregion
 

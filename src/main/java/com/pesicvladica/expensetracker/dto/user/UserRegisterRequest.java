@@ -1,6 +1,6 @@
 package com.pesicvladica.expensetracker.dto.user;
 
-public class UserRegisterRequest {
+public final class UserRegisterRequest {
 
     // region Parameters
 

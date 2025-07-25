@@ -6,9 +6,9 @@ import com.pesicvladica.expensetracker.dto.user.UserAuthResponse;
 import com.pesicvladica.expensetracker.service.authentication.AuthService;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
 import com.pesicvladica.expensetracker.util.helpers.DeviceInfoHelper;
+import com.pesicvladica.expensetracker.util.security.token.JWTTokenService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,12 +24,18 @@ public class AuthController {
 
     // region Parameters
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+    private final JWTTokenService JWTTokenService;
 
     // endregion
 
     // region Initialization
+
+    public AuthController(AuthService authService,
+                          JWTTokenService JWTTokenService) {
+        this.authService = authService;
+        this.JWTTokenService = JWTTokenService;
+    }
 
     // endregion
 
@@ -40,7 +46,7 @@ public class AuthController {
     public ResponseEntity<UserAuthResponse> register(HttpServletRequest request,
                                                      @RequestBody UserRegisterRequest userRegisterRequest) {
         var deviceInfo = DeviceInfoHelper.getDeviceInfoFromRequest(request);
-        return ResponseEntity.ok().body(authService.register(userRegisterRequest, deviceInfo));
+        return ResponseEntity.ok().body(new UserAuthResponse(authService.register(userRegisterRequest, deviceInfo)));
     }
 
     @PostMapping("/login")
@@ -48,7 +54,9 @@ public class AuthController {
     public ResponseEntity<UserAuthResponse> login(HttpServletRequest request,
                                                   @RequestBody UserLoginRequest userLoginRequest) {
         var deviceInfo = DeviceInfoHelper.getDeviceInfoFromRequest(request);
-        return ResponseEntity.ok().body(authService.login(userLoginRequest, deviceInfo));
+        var user = authService.login(userLoginRequest, deviceInfo);
+        var token = JWTTokenService.generateAccessTokenFor(user);
+        return ResponseEntity.ok().body(new UserAuthResponse(token, user));
     }
 
     @PostMapping("/logout")

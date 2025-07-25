@@ -4,7 +4,7 @@ import com.pesicvladica.expensetracker.model.AppUser;
 
 import java.time.LocalDateTime;
 
-public class UserResponse {
+public final class UserResponse {
 
     // region Properties
 

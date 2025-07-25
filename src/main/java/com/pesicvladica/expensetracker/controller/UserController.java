@@ -2,7 +2,6 @@ package com.pesicvladica.expensetracker.controller;
 
 import com.pesicvladica.expensetracker.dto.user.UserResponse;
 import com.pesicvladica.expensetracker.service.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -16,12 +15,15 @@ public class UserController {
 
     // region Properties
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     // endregion
 
     // region Initialization
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     // endregion
 
@@ -31,7 +33,7 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserResponse> getCurrent(Authentication authentication) {
         var username = authentication.getName();
-        return ResponseEntity.ok().body(userService.getUser(username));
+        return ResponseEntity.ok().body(new UserResponse(userService.getUser(username)));
     }
 
     // endregion

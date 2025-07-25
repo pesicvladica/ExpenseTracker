@@ -80,9 +80,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Transaction> getTransactions(@AuthenticationPrincipal AppUserDetails currentUser) {
+    public List<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser) {
         var user = currentUser.getAppUser();
         return transactionRepository.findByAppUserAndTypeOrderByTimeAddedDesc(user, TransactionType.INCOME).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser) {
+        var user = currentUser.getAppUser();
+        return transactionRepository.findByAppUserAndTypeOrderByTimeAddedDesc(user, TransactionType.OUTCOME).toList();
     }
 
     // endregion
