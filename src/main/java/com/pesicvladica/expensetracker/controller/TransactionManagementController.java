@@ -4,7 +4,6 @@ import com.pesicvladica.expensetracker.dto.transaction.IncomeCreateRequest;
 import com.pesicvladica.expensetracker.dto.transaction.OutcomeCreateRequest;
 import com.pesicvladica.expensetracker.dto.transaction.TransactionManagementResponse;
 import com.pesicvladica.expensetracker.dto.transaction.TransactionUpdateRequest;
-import com.pesicvladica.expensetracker.model.Transaction;
 import com.pesicvladica.expensetracker.service.transactions.TransactionService;
 import jakarta.transaction.InvalidTransactionException;
 import jakarta.validation.Valid;
@@ -12,12 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping("/api/transaction")
 public class TransactionManagementController {
 
     // region Properties
@@ -66,36 +62,6 @@ public class TransactionManagementController {
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long transactionId) {
         transactionService.deleteTransaction(transactionId, null);
         return ResponseEntity.noContent().build();
-    }
-
-    // TODO: Separate overview from management
-
-    @GetMapping("/{transactionId}")
-    public ResponseEntity<TransactionManagementResponse> getTransactionById(@PathVariable Long transactionId) throws InvalidTransactionException {
-        Optional<Transaction> transactionOptional = transactionService.getTransactionById(transactionId, null);
-        return transactionOptional
-                .map(transaction -> ResponseEntity.ok().body(new TransactionManagementResponse(transaction)))
-                .orElseThrow(() -> new InvalidTransactionException("Transaction with ID " + transactionId + " not found."));
-    }
-
-    @GetMapping("/income")
-    public ResponseEntity<List<TransactionManagementResponse>> getIncomes() {
-        List<Transaction> transactions = transactionService.getIncomes(null);
-
-        List<TransactionManagementResponse> responseList = transactions.stream()
-                .map(TransactionManagementResponse::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(responseList);
-    }
-
-    @GetMapping("/outcome")
-    public ResponseEntity<List<TransactionManagementResponse>> getOutcomes() {
-        List<Transaction> transactions = transactionService.getOutcomes(null);
-
-        List<TransactionManagementResponse> responseList = transactions.stream()
-                .map(TransactionManagementResponse::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(responseList);
     }
 
     // endregion
