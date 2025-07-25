@@ -12,12 +12,17 @@ import java.util.Optional;
 
 @PreAuthorize("isAuthenticated()")
 public interface TransactionService {
+
     Transaction addTransaction(TransactionCreateRequest data, @AuthenticationPrincipal AppUserDetails currentUser);
-    @PreAuthorize("@securityService.isTransactionOwner(#transactionId, #currentUser.id)")
+
+    @PreAuthorize("@securityService.isTransactionOwner(#transactionId, #currentUser.appUser)")
     void updateTransaction(Long transactionId, TransactionUpdateRequest data, @AuthenticationPrincipal AppUserDetails currentUser);
-    @PreAuthorize("@securityService.isTransactionOwner(#transactionId, #currentUser.id)")
+
+    @PreAuthorize("@securityService.isTransactionOwner(#transactionId, #currentUser.appUser)")
     void deleteTransaction(Long transactionId, @AuthenticationPrincipal AppUserDetails currentUser);
-    @PreAuthorize("@securityService.isTransactionOwner(#transactionId, #currentUser.id)")
+
+    @PreAuthorize("@securityService.isTransactionOwner(#transactionId, #currentUser.appUser)")
     Optional<Transaction> getTransactionById(Long transactionId, @AuthenticationPrincipal AppUserDetails currentUser);
+
     List<Transaction> getTransactions(@AuthenticationPrincipal AppUserDetails currentUser);
 }

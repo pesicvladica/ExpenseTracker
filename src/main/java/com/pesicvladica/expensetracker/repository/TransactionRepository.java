@@ -9,5 +9,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+    boolean existsByIdAndUser(Long id, AppUser user);
     Stream<Transaction> findByAppUserAndTypeOrderByTimeAddedDesc(AppUser user, TransactionType type);
 }

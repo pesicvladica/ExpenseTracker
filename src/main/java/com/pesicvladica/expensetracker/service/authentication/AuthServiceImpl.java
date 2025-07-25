@@ -65,6 +65,7 @@ public class AuthServiceImpl implements AuthService {
 
     // region Public Methods
 
+    @Override
     @Transactional
     public UserAuthResponse register(UserRegisterRequest request, DeviceInfo deviceInfo) {
         if (loginAttemptService.isBlocked(null, deviceInfo) || loginAttemptService.isBlocked("", deviceInfo)) {
@@ -80,6 +81,7 @@ public class AuthServiceImpl implements AuthService {
         return new UserAuthResponse(savedUser);
     }
 
+    @Override
     public UserAuthResponse login(UserLoginRequest request, DeviceInfo deviceInfo) {
         if (loginAttemptService.isBlocked(request.getUsernameOrEmail(), deviceInfo)) {
             throw new BlockedUserException("Login failed (account or IP blocked).");
@@ -101,6 +103,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
     @Transactional
     public void logout(AppUser user) {
         user.incrementTokenVersion();

@@ -21,6 +21,10 @@ public class UserController {
 
     // endregion
 
+    // region Initialization
+
+    // endregion
+
     // region API Endpoints
 
     @GetMapping("/me")

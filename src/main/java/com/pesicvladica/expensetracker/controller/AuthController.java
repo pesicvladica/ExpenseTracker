@@ -29,6 +29,10 @@ public class AuthController {
 
     // endregion
 
+    // region Initialization
+
+    // endregion
+
     // region API Endpoints
 
     @PostMapping("/register")

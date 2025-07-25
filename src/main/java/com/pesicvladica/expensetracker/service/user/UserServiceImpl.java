@@ -18,6 +18,7 @@ public class UserServiceImpl implements UserService {
 
     // region UserService
 
+    @Override
     public UserResponse getUser(String username) {
         var user = appUserRepository
                 .findByUsername(username)
