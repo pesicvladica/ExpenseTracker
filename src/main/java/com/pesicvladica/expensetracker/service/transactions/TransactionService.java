@@ -7,8 +7,8 @@ import com.pesicvladica.expensetracker.service.authentication.security.AppUserDe
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @PreAuthorize("isAuthenticated()")
 public interface TransactionService {
@@ -24,6 +24,6 @@ public interface TransactionService {
     @PreAuthorize("@securityService.isTransactionOwner(#transactionId, #currentUser.appUser)")
     Optional<Transaction> getTransactionById(Long transactionId, @AuthenticationPrincipal AppUserDetails currentUser);
 
-    List<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser);
-    List<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser);
+    Stream<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser);
+    Stream<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser);
 }

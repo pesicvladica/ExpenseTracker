@@ -13,8 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -80,16 +80,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser) {
+    public Stream<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser) {
         var user = currentUser.getAppUser();
-        return transactionRepository.findByAppUserAndTypeOrderByTimeAddedDesc(user, TransactionType.INCOME).toList();
+        return transactionRepository.findByAppUserAndTypeOrderByTimeAddedDesc(user, TransactionType.INCOME);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser) {
+    public Stream<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser) {
         var user = currentUser.getAppUser();
-        return transactionRepository.findByAppUserAndTypeOrderByTimeAddedDesc(user, TransactionType.OUTCOME).toList();
+        return transactionRepository.findByAppUserAndTypeOrderByTimeAddedDesc(user, TransactionType.OUTCOME);
     }
 
     // endregion

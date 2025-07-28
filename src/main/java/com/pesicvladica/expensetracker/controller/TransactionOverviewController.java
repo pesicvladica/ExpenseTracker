@@ -41,22 +41,18 @@ public class TransactionOverviewController {
 
     @GetMapping("/incomes")
     public ResponseEntity<List<TransactionManagementResponse>> getIncomes() {
-        List<Transaction> transactions = transactionService.getIncomes(null);
-
-        List<TransactionManagementResponse> responseList = transactions.stream()
+        List<TransactionManagementResponse> transactions = transactionService.getIncomes(null)
                 .map(TransactionManagementResponse::new)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(responseList);
+        return ResponseEntity.ok().body(transactions);
     }
 
     @GetMapping("/outcomes")
     public ResponseEntity<List<TransactionManagementResponse>> getOutcomes() {
-        List<Transaction> transactions = transactionService.getOutcomes(null);
-
-        List<TransactionManagementResponse> responseList = transactions.stream()
+        List<TransactionManagementResponse> transactions = transactionService.getOutcomes(null)
                 .map(TransactionManagementResponse::new)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(responseList);
+        return ResponseEntity.ok().body(transactions);
     }
 
     // endregion
