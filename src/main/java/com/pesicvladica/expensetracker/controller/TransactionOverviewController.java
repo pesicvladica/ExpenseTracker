@@ -2,9 +2,11 @@ package com.pesicvladica.expensetracker.controller;
 
 import com.pesicvladica.expensetracker.dto.transaction.TransactionManagementResponse;
 import com.pesicvladica.expensetracker.model.Transaction;
+import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
 import com.pesicvladica.expensetracker.service.transactions.TransactionService;
 import jakarta.transaction.InvalidTransactionException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,23 +35,24 @@ public class TransactionOverviewController {
 
     @GetMapping("/{transactionId}")
     public ResponseEntity<TransactionManagementResponse> getTransactionById(@PathVariable Long transactionId) throws InvalidTransactionException {
-        Optional<Transaction> transactionOptional = transactionService.getTransactionById(transactionId, null);
+        Optional<Transaction> transactionOptional = transactionService.getTransactionById(transactionId);
+        transactionOptional.ifPresent(transaction -> transaction.getUser().getUsername());
         return transactionOptional
                 .map(transaction -> ResponseEntity.ok().body(new TransactionManagementResponse(transaction)))
                 .orElseThrow(() -> new InvalidTransactionException("Transaction with ID " + transactionId + " not found."));
     }
 
     @GetMapping("/incomes")
-    public ResponseEntity<List<TransactionManagementResponse>> getIncomes() {
-        List<TransactionManagementResponse> transactions = transactionService.getIncomes(null)
+    public ResponseEntity<List<TransactionManagementResponse>> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser) {
+        List<TransactionManagementResponse> transactions = transactionService.getIncomes(currentUser).stream()
                 .map(TransactionManagementResponse::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(transactions);
     }
 
     @GetMapping("/outcomes")
-    public ResponseEntity<List<TransactionManagementResponse>> getOutcomes() {
-        List<TransactionManagementResponse> transactions = transactionService.getOutcomes(null)
+    public ResponseEntity<List<TransactionManagementResponse>> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser) {
+        List<TransactionManagementResponse> transactions = transactionService.getOutcomes(currentUser).stream()
                 .map(TransactionManagementResponse::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(transactions);

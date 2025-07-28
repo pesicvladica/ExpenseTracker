@@ -7,23 +7,23 @@ import com.pesicvladica.expensetracker.service.authentication.security.AppUserDe
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @PreAuthorize("isAuthenticated()")
 public interface TransactionService {
 
     Transaction addTransaction(TransactionCreateRequest data, @AuthenticationPrincipal AppUserDetails currentUser);
 
-    @PreAuthorize("@securityService.isTransactionOwner(#transactionId, #currentUser.appUser)")
-    void updateTransaction(Long transactionId, TransactionUpdateRequest data, @AuthenticationPrincipal AppUserDetails currentUser);
+    @PreAuthorize("@securityService.isTransactionOwner(#transactionId)")
+    Transaction updateTransaction(Long transactionId, TransactionUpdateRequest data);
 
-    @PreAuthorize("@securityService.isTransactionOwner(#transactionId, #currentUser.appUser)")
-    void deleteTransaction(Long transactionId, @AuthenticationPrincipal AppUserDetails currentUser);
+    @PreAuthorize("@securityService.isTransactionOwner(#transactionId)")
+    void deleteTransaction(Long transactionId);
 
-    @PreAuthorize("@securityService.isTransactionOwner(#transactionId, #currentUser.appUser)")
-    Optional<Transaction> getTransactionById(Long transactionId, @AuthenticationPrincipal AppUserDetails currentUser);
+    @PreAuthorize("@securityService.isTransactionOwner(#transactionId)")
+    Optional<Transaction> getTransactionById(Long transactionId);
 
-    Stream<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser);
-    Stream<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser);
+    List<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser);
+    List<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser);
 }

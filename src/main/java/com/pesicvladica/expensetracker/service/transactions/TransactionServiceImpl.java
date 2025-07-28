@@ -13,8 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -50,7 +50,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    public void updateTransaction(Long transactionId, TransactionUpdateRequest data, @AuthenticationPrincipal AppUserDetails currentUser) {
+    public Transaction updateTransaction(Long transactionId, TransactionUpdateRequest data) {
         transactionUpdateRequestValidator.validate(data);
         var transaction = transactionRepository.findById(transactionId).orElse(null);
         if (transaction == null) {
@@ -62,34 +62,34 @@ public class TransactionServiceImpl implements TransactionService {
         if (data.getTimeAdded() != null) {
             transaction.setTimeAdded(data.getTimeAdded());
         }
-        transactionRepository.save(transaction);
+
+        return transactionRepository.save(transaction);
     }
 
     @Override
     @Transactional
-    public void deleteTransaction(Long transactionId, @AuthenticationPrincipal AppUserDetails currentUser) {
+    public void deleteTransaction(Long transactionId) {
         transactionRepository.deleteById(transactionId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Transaction> getTransactionById(Long transactionId, @AuthenticationPrincipal AppUserDetails currentUser) {
-        return transactionRepository.findById(transactionId);
-
+    public Optional<Transaction> getTransactionById(Long transactionId) {
+        return transactionRepository.findByIdWithUser(transactionId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Stream<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser) {
+    public List<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser) {
         var user = currentUser.getAppUser();
-        return transactionRepository.findByAppUserAndTypeOrderByTimeAddedDesc(user, TransactionType.INCOME);
+        return transactionRepository.findByUserAndTypeOrderByTimeAddedDesc(user, TransactionType.INCOME);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Stream<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser) {
+    public List<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser) {
         var user = currentUser.getAppUser();
-        return transactionRepository.findByAppUserAndTypeOrderByTimeAddedDesc(user, TransactionType.OUTCOME);
+        return transactionRepository.findByUserAndTypeOrderByTimeAddedDesc(user, TransactionType.OUTCOME);
     }
 
     // endregion

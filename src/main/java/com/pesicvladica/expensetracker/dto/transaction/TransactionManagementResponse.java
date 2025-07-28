@@ -1,6 +1,5 @@
 package com.pesicvladica.expensetracker.dto.transaction;
 
-import com.pesicvladica.expensetracker.model.AppUser;
 import com.pesicvladica.expensetracker.model.Transaction;
 import com.pesicvladica.expensetracker.model.TransactionType;
 
@@ -12,7 +11,8 @@ public class TransactionManagementResponse {
     // region Properties
 
     private final Long id;
-    private final AppUser user;
+    private final Long userId;
+    private final String username;
     private final BigDecimal amount;
     private final LocalDateTime timeAdded;
     private final TransactionType type;
@@ -23,10 +23,17 @@ public class TransactionManagementResponse {
 
     public TransactionManagementResponse(Transaction transaction) {
         this.id = transaction.getId();
-        this.user = transaction.getUser();
         this.amount = transaction.getAmount();
         this.timeAdded = transaction.getTimeAdded();
         this.type = transaction.getType();
+
+        if (transaction.getUser() != null) {
+            this.userId = transaction.getUser().getId();
+            this.username = transaction.getUser().getUsername();
+        } else {
+            this.userId = null;
+            this.username = null;
+        }
     }
 
     // endregion
@@ -34,7 +41,8 @@ public class TransactionManagementResponse {
     // region Getters
 
     public Long getId() { return id; }
-    public AppUser getUser() { return user; }
+    public Long getUserId() { return userId; }
+    public String getUsername() { return username; }
     public BigDecimal getAmount() { return amount; }
     public LocalDateTime getTimeAdded() { return timeAdded; }
     public TransactionType getType() { return type; }
