@@ -315,7 +315,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/transactions/5",
+					"raw": "http://localhost:8080/api/transaction/5",
 					"protocol": "http",
 					"host": [
 						"localhost"

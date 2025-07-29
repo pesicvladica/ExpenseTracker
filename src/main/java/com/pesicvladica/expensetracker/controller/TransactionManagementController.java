@@ -4,6 +4,7 @@ import com.pesicvladica.expensetracker.dto.transaction.IncomeCreateRequest;
 import com.pesicvladica.expensetracker.dto.transaction.OutcomeCreateRequest;
 import com.pesicvladica.expensetracker.dto.transaction.TransactionManagementResponse;
 import com.pesicvladica.expensetracker.dto.transaction.TransactionUpdateRequest;
+import com.pesicvladica.expensetracker.model.Transaction;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
 import com.pesicvladica.expensetracker.service.transactions.TransactionService;
 import jakarta.transaction.InvalidTransactionException;
@@ -13,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/transaction")
@@ -62,6 +64,14 @@ public class TransactionManagementController {
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long transactionId) {
         transactionService.deleteTransaction(transactionId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{transactionId}")
+    public ResponseEntity<TransactionManagementResponse> getTransactionById(@PathVariable Long transactionId) throws InvalidTransactionException {
+        Optional<Transaction> transactionOptional = transactionService.getTransactionById(transactionId);
+        return transactionOptional
+                .map(transaction -> ResponseEntity.ok().body(new TransactionManagementResponse(transaction)))
+                .orElseThrow(() -> new InvalidTransactionException("Transaction with ID " + transactionId + " not found."));
     }
 
     // endregion

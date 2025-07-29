@@ -33,15 +33,6 @@ public class TransactionOverviewController {
 
     // region API Endpoints
 
-    @GetMapping("/{transactionId}")
-    public ResponseEntity<TransactionManagementResponse> getTransactionById(@PathVariable Long transactionId) throws InvalidTransactionException {
-        Optional<Transaction> transactionOptional = transactionService.getTransactionById(transactionId);
-        transactionOptional.ifPresent(transaction -> transaction.getUser().getUsername());
-        return transactionOptional
-                .map(transaction -> ResponseEntity.ok().body(new TransactionManagementResponse(transaction)))
-                .orElseThrow(() -> new InvalidTransactionException("Transaction with ID " + transactionId + " not found."));
-    }
-
     @GetMapping("/incomes")
     public ResponseEntity<List<TransactionManagementResponse>> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser) {
         List<TransactionManagementResponse> transactions = transactionService.getIncomes(currentUser).stream()
