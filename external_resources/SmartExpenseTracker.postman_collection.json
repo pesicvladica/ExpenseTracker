@@ -1,0 +1,396 @@
+{
+	"info": {
+		"_postman_id": "fb17eecf-245f-4fbf-99a0-dc6e9d15cb6e",
+		"name": "SmartExpenseTracker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5468946"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"pesicvladica\",\"email\":\"pesicvladica@gmail.com\",\"password\":\"Password123!\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Device-Id",
+						"value": "postman-device-1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"usernameOrEmail\":\"pesicvladica\", \"password\":\"Password123!\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserDetails",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJKc29uV2ViVG9rZW5TZXJ2aWNlIiwic3ViIjoicGVzaWN2bGFkaWNhIiwidG9rZW5fdmVyc2lvbiI6MCwiaWF0IjoxNzUzNjk1NzUyLCJleHAiOjE3NTM2OTY2NTJ9.G1t8fQOlOTErvpa-IeSeYAOsuRlt9sMZi0Qvy7ZMYJ2pN55EzhnCZCDjR8LR79Qm-CXaKnQEvIfyQLPENtAmLw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/user/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJKc29uV2ViVG9rZW5TZXJ2aWNlIiwic3ViIjoicGVzaWN2bGFkaWNhIiwidG9rZW5fdmVyc2lvbiI6MCwiaWF0IjoxNzUzNjk1NzUyLCJleHAiOjE3NTM2OTY2NTJ9.G1t8fQOlOTErvpa-IeSeYAOsuRlt9sMZi0Qvy7ZMYJ2pN55EzhnCZCDjR8LR79Qm-CXaKnQEvIfyQLPENtAmLw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddOutcome",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJKc29uV2ViVG9rZW5TZXJ2aWNlIiwic3ViIjoicGVzaWN2bGFkaWNhIiwidG9rZW5fdmVyc2lvbiI6MSwiaWF0IjoxNzUzNzAyNDk0LCJleHAiOjE3NTM3MDMzOTR9.xqBYGtaWu3tqpNPbp79Qh9tCbhm3-fnDQSwWl8siLLFykT1s52_mbFwXh1t3Uq0ZuxtET0Y7E9RCsobFwazseg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"amount\": 2.5, \"timeAdded\": \"2025-07-28T11:00:00\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/transaction/outcome/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"transaction",
+						"outcome",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddIncome",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJKc29uV2ViVG9rZW5TZXJ2aWNlIiwic3ViIjoicGVzaWN2bGFkaWNhIiwidG9rZW5fdmVyc2lvbiI6MSwiaWF0IjoxNzUzNzAyNDk0LCJleHAiOjE3NTM3MDMzOTR9.xqBYGtaWu3tqpNPbp79Qh9tCbhm3-fnDQSwWl8siLLFykT1s52_mbFwXh1t3Uq0ZuxtET0Y7E9RCsobFwazseg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"amount\": 23.5, \"timeAdded\": \"2025-07-28T11:00:00\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/transaction/income/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"transaction",
+						"income",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateTransaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJKc29uV2ViVG9rZW5TZXJ2aWNlIiwic3ViIjoicGVzaWN2bGFkaWNhIiwidG9rZW5fdmVyc2lvbiI6MSwiaWF0IjoxNzUzNzA3MDkwLCJleHAiOjE3NTM3MDc5OTB9.I8ZPVZN7OeOOr31CYpN-6w6Op6MVhsL55poag-LV6Bavzb_3BcyAAnvhA5ouZVzUyoN3l73L5k-jzsavNPScCA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"timeAdded\": \"2025-07-27T17:00:00\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/transaction/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"transaction",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteTransaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJKc29uV2ViVG9rZW5TZXJ2aWNlIiwic3ViIjoicGVzaWN2bGFkaWNhIiwidG9rZW5fdmVyc2lvbiI6MSwiaWF0IjoxNzUzNzAzNTU1LCJleHAiOjE3NTM3MDQ0NTV9.wXf60eMfurVRd7oHKmur04PqBt-9fESwAHYPKs9XbuoKRWYjgC8kLN07qoOwjGzBbaleBCzmeRBxsruRLVmmdg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/transaction/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"transaction",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTransaction",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJKc29uV2ViVG9rZW5TZXJ2aWNlIiwic3ViIjoicGVzaWN2bGFkaWNhIiwidG9rZW5fdmVyc2lvbiI6MSwiaWF0IjoxNzUzNzA1MzQ1LCJleHAiOjE3NTM3MDYyNDV9.3RY-miD324ansSVGFu7q5pZ207sWOR3WQJGIZK3Dy7nC1MHeRTTL6pJaXM-PmuXxmspbyprqxkhgaew0rtv4EA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/transactions/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"transactions",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetIncomes",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJKc29uV2ViVG9rZW5TZXJ2aWNlIiwic3ViIjoicGVzaWN2bGFkaWNhIiwidG9rZW5fdmVyc2lvbiI6MSwiaWF0IjoxNzUzNzA3MjczLCJleHAiOjE3NTM3MDgxNzN9.hkQL4GYjEKJHyG73PVQKJgDzJidPDLQK2xTDlRXRWLGuxQZ-0T4HOTdyRkbnn0kYCLqZuaAvfoWheVewIK9Qcw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/transactions/incomes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"transactions",
+						"incomes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetOutcomes",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJKc29uV2ViVG9rZW5TZXJ2aWNlIiwic3ViIjoicGVzaWN2bGFkaWNhIiwidG9rZW5fdmVyc2lvbiI6MSwiaWF0IjoxNzUzNzA3MjczLCJleHAiOjE3NTM3MDgxNzN9.hkQL4GYjEKJHyG73PVQKJgDzJidPDLQK2xTDlRXRWLGuxQZ-0T4HOTdyRkbnn0kYCLqZuaAvfoWheVewIK9Qcw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/transactions/outcomes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"transactions",
+						"outcomes"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
