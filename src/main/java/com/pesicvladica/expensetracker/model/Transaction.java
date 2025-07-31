@@ -30,6 +30,9 @@ public class Transaction {
     @Column(name = "type", nullable = false)
     private TransactionType type;
 
+    @Version
+    private Long version;
+
     // endregion
 
     // region Initialization

@@ -9,14 +9,18 @@ import com.pesicvladica.expensetracker.repository.TransactionRepository;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
 import com.pesicvladica.expensetracker.util.validator.TransactionCreateRequestValidator;
 import com.pesicvladica.expensetracker.util.validator.TransactionUpdateRequestValidator;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
+@PreAuthorize("isAuthenticated()")
 public class TransactionServiceImpl implements TransactionService {
 
     // region Properties
@@ -50,6 +54,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
+    @PreAuthorize("@securityService.isTransactionOwner(#transactionId)")
     public Transaction updateTransaction(Long transactionId, TransactionUpdateRequest data) {
         transactionUpdateRequestValidator.validate(data);
         var transaction = transactionRepository.findById(transactionId).orElse(null);
@@ -63,31 +68,41 @@ public class TransactionServiceImpl implements TransactionService {
             transaction.setTimeAdded(data.getTimeAdded());
         }
 
-        return transactionRepository.save(transaction);
+        try {
+            return transactionRepository.save(transaction);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            throw e;
+        }
     }
 
     @Override
     @Transactional
+    @PreAuthorize("@securityService.isTransactionOwner(#transactionId)")
     public void deleteTransaction(Long transactionId) {
-        transactionRepository.deleteById(transactionId);
+        try {
+            transactionRepository.deleteById(transactionId);
+        } catch (EmptyResultDataAccessException ex) {
+            throw ex;
+        }
     }
 
     @Override
     @Transactional(readOnly = true)
+    @PreAuthorize("@securityService.isTransactionOwner(#transactionId)")
     public Optional<Transaction> getTransactionById(Long transactionId) {
         return transactionRepository.findByIdWithUser(transactionId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser) {
+    public Stream<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser) {
         var user = currentUser.getAppUser();
         return transactionRepository.findByUserAndTypeOrderByTimeAddedDesc(user, TransactionType.INCOME);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser) {
+    public Stream<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser) {
         var user = currentUser.getAppUser();
         return transactionRepository.findByUserAndTypeOrderByTimeAddedDesc(user, TransactionType.OUTCOME);
     }

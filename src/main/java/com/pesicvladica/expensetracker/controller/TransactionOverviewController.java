@@ -35,7 +35,7 @@ public class TransactionOverviewController {
 
     @GetMapping("/incomes")
     public ResponseEntity<List<TransactionManagementResponse>> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser) {
-        List<TransactionManagementResponse> transactions = transactionService.getIncomes(currentUser).stream()
+        List<TransactionManagementResponse> transactions = transactionService.getIncomes(currentUser)
                 .map(TransactionManagementResponse::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(transactions);
@@ -43,7 +43,7 @@ public class TransactionOverviewController {
 
     @GetMapping("/outcomes")
     public ResponseEntity<List<TransactionManagementResponse>> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser) {
-        List<TransactionManagementResponse> transactions = transactionService.getOutcomes(currentUser).stream()
+        List<TransactionManagementResponse> transactions = transactionService.getOutcomes(currentUser)
                 .map(TransactionManagementResponse::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(transactions);
