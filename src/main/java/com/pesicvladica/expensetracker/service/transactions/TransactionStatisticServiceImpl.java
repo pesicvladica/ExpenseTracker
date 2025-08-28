@@ -4,6 +4,7 @@ import com.pesicvladica.expensetracker.model.Transaction;
 import com.pesicvladica.expensetracker.model.TransactionType;
 import com.pesicvladica.expensetracker.repository.TransactionRepository;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
+import com.pesicvladica.expensetracker.util.logging.TrackTime;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ public class TransactionStatisticServiceImpl implements TransactionStatisticServ
 
     @Override
     @Transactional(readOnly = true)
+    @TrackTime
     public Stream<Transaction> getMonthlyTransactionsForType(Integer month,
                                                              TransactionType type,
                                                              @AuthenticationPrincipal AppUserDetails currentUser) {

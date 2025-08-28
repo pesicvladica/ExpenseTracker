@@ -1,5 +1,7 @@
 package com.pesicvladica.expensetracker.dto.transaction;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Positive;
 
@@ -19,7 +21,9 @@ public class TransactionUpdateRequest {
 
     // region Initialization
 
-    protected TransactionUpdateRequest(@Nullable BigDecimal amount, @Nullable LocalDateTime timeAdded) {
+    @JsonCreator
+    public TransactionUpdateRequest(@JsonProperty("amount") @Nullable BigDecimal amount,
+                                    @JsonProperty("timeAdded") @Nullable LocalDateTime timeAdded) {
         this.amount = amount;
         this.timeAdded = timeAdded;
     }

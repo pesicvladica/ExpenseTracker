@@ -7,9 +7,13 @@ import com.pesicvladica.expensetracker.model.Transaction;
 import com.pesicvladica.expensetracker.model.TransactionType;
 import com.pesicvladica.expensetracker.repository.TransactionRepository;
 import com.pesicvladica.expensetracker.service.authentication.security.AppUserDetails;
+import com.pesicvladica.expensetracker.util.logging.TrackTime;
 import com.pesicvladica.expensetracker.util.validator.TransactionCreateRequestValidator;
 import com.pesicvladica.expensetracker.util.validator.TransactionUpdateRequestValidator;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 @PreAuthorize("isAuthenticated()")
@@ -94,17 +97,23 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @TrackTime
     @Transactional(readOnly = true)
-    public Stream<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser) {
+    public Page<Transaction> getIncomes(@AuthenticationPrincipal AppUserDetails currentUser, int pageNo, int pageSize) {
         var user = currentUser.getAppUser();
-        return transactionRepository.findByUserAndTypeOrderByTimeAddedDesc(user, TransactionType.INCOME);
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        return transactionRepository.findByUserAndTypeOrderByTimeAddedDesc(user, TransactionType.INCOME, pageable);
     }
 
     @Override
+    @TrackTime
     @Transactional(readOnly = true)
-    public Stream<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser) {
+    public Page<Transaction> getOutcomes(@AuthenticationPrincipal AppUserDetails currentUser, int pageNo, int pageSize) {
         var user = currentUser.getAppUser();
-        return transactionRepository.findByUserAndTypeOrderByTimeAddedDesc(user, TransactionType.OUTCOME);
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        return transactionRepository.findByUserAndTypeOrderByTimeAddedDesc(user, TransactionType.OUTCOME, pageable);
     }
 
     // endregion

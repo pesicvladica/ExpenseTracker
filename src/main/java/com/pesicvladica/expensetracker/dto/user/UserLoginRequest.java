@@ -1,5 +1,8 @@
 package com.pesicvladica.expensetracker.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public final class UserLoginRequest {
 
     // region Parameters
@@ -11,7 +14,9 @@ public final class UserLoginRequest {
 
     // region Initialization
 
-    public UserLoginRequest(String usernameOrEmail, String password) {
+    @JsonCreator
+    public UserLoginRequest(@JsonProperty("username") String usernameOrEmail,
+                            @JsonProperty("password") String password) {
         this.usernameOrEmail = usernameOrEmail;
         this.password = password;
     }
